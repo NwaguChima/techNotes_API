@@ -22,3 +22,10 @@ const updateUser = asyncHandler(async (req, res) => {});
 // @route  DELETE /users/:id
 // @access Private
 const deleteUser = asyncHandler(async (req, res) => {});
+
+module.exports = {
+  getAllUsers,
+  createNewUser,
+  updateUser,
+  deleteUser,
+};
