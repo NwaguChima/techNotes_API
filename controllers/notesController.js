@@ -78,3 +78,26 @@ const updateNote = asyncHandler(async (req, res) => {
 
   res.json(`Note ${updatedNote.title} updated`);
 });
+
+// @desc   Delete a note
+// @route  DELETE /notes
+// @access Private
+const deleteNote = asyncHandler(async (req, res) => {
+  const { id } = req.body;
+
+  if (!id) {
+    return res.status(400).json({ message: "Note id is required" });
+  }
+
+  const note = await Note.findById(id).exec();
+
+  if (!note) {
+    return res.status(404).json({ message: "Note not found" });
+  }
+
+  const result = await note.deleteOne();
+
+  const reply = `Note ${result.title} with ID ${result._id} deleted`;
+
+  res.json(reply);
+});
