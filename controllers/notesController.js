@@ -101,3 +101,10 @@ const deleteNote = asyncHandler(async (req, res) => {
 
   res.json(reply);
 });
+
+module.exports = {
+  getAllNotes,
+  createNewNote,
+  updateNote,
+  deleteNote,
+};
