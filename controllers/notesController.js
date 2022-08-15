@@ -46,3 +46,35 @@ const createNewNote = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Invalid note data recieved" });
   }
 });
+
+// @desc   Update a note
+// @route  PATCH /notes
+// @access Private
+const updateNote = asyncHandler(async (req, res) => {
+  const { id, user, title, text, completed } = req.body;
+
+  if (!id || !user || !title || !text || typeof completed !== "boolean") {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  const note = await Note.findById(id).exec();
+
+  if (!note) {
+    return res.status(404).json({ message: "Note not found" });
+  }
+
+  const duplicate = await Note.findOne({ title }).lean().exec();
+
+  if (duplicate && duplicate._id.toString() !== id) {
+    return res.status(409).json({ message: "Note title already exists" });
+  }
+
+  note.user = user;
+  note.title = title;
+  note.text = text;
+  note.completed = completed;
+
+  const updatedNote = await note.save();
+
+  res.json(`Note ${updatedNote.title} updated`);
+});
