@@ -108,7 +108,7 @@ const refresh = asyncHandler(async (req, res, next) => {
   );
 });
 
-const logoout = asyncHandler(async (req, res, next) => {
+const logout = asyncHandler(async (req, res, next) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) return res.sendStatus(204); // No Content
 
@@ -126,5 +126,5 @@ const logoout = asyncHandler(async (req, res, next) => {
 module.exports = {
   login,
   refresh,
-  logoout,
+  logout,
 };
