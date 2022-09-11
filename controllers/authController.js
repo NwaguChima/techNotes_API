@@ -1,12 +1,11 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const asyncHandler = require("express-async-handler");
 
 // @desc Login
 // @route POST /auth
 // @access Public
-const login = asyncHandler(async (req, res) => {
+const login = async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
@@ -50,12 +49,12 @@ const login = asyncHandler(async (req, res) => {
 
   // Send accessToken containing username and roles
   res.json({ accessToken });
-});
+};
 
 // @desc Refresh
 // @route GET /auth/refresh
 // @access Public - because access token has expired
-const refresh = (req, res) => {
+const refresh = async (req, res) => {
   const cookies = req.cookies;
 
   if (!cookies?.jwt) return res.status(401).json({ message: "Unauthorized" });
@@ -65,7 +64,7 @@ const refresh = (req, res) => {
   jwt.verify(
     refreshToken,
     process.env.REFRESH_TOKEN_SECRET,
-    asyncHandler(async (err, decoded) => {
+    async (err, decoded) => {
       if (err) return res.status(403).json({ message: "Forbidden" });
 
       const foundUser = await User.findOne({
@@ -86,14 +85,14 @@ const refresh = (req, res) => {
       );
 
       res.json({ accessToken });
-    })
+    }
   );
 };
 
 // @desc Logout
 // @route POST /auth/logout
 // @access Public - just to clear cookie if exists
-const logout = (req, res) => {
+const logout = async (req, res) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) return res.sendStatus(204); //No content
   res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
